@@ -10,13 +10,21 @@ import math
 
 logger = logging.getLogger('Zauba')
 
-class zauba(CrawlSpider):
+class Zauba(CrawlSpider):
+
     name = 'Zauba'
-    login_url = 'https://www.zauba.com/user'
-    login_user = 'scrapybot1@gmail.com'
-    login_password = 'scrapybot1'
-    logger.info('zauba')
-    start_urls = ['https://www.zauba.com/import-gold/p-1-hs-code.html']
+    def __init__(self,
+                search_term = 'medical',
+                login_user = 'scrapybot1@gmail.com',
+                login_password = 'scrapybot1',
+                *args,**kwargs):
+        super(Zauba, self).__init__(*args, **kwargs)
+        self.search_term = search_term
+        self.login_url = 'https://www.zauba.com/user'
+        self.login_user = 'scrapybot1@gmail.com'
+        self.login_password = 'scrapybot1'
+        self.logger.info('zauba')
+        self.start_urls = ['https://www.zauba.com/import-' + self.search_term + '/p-1-hs-code.html']
 
     def start_requests(self):
         logger.info('start_request')
@@ -47,7 +55,7 @@ class zauba(CrawlSpider):
         logger.warning('***************    :   %d' % total_pages)
         print('***************    :   %d' % total_pages)
         for page in xrange(1, (total_pages + 1)):
-            url = 'https://www.zauba.com/import-gold/p-' + str(page) +'-hs-code.html'
+            url = 'https://www.zauba.com/import-' + self.search_term + '/p-' + str(page) +'-hs-code.html'
             logger.debug('url%d  :  %s' % (page,url))
             yield scrapy.Request(url, callback=self.extract_entries)
 
