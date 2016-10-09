@@ -65,16 +65,8 @@ class Zauba(CrawlSpider):
         row_trs = response.xpath('//div[@id="block-system-main"]/div[@class="content"]/div/table/tr')
         for row_tr in row_trs[1:]:
             row_content = row_tr.xpath('.//td/text()').extract()
-            if (row_content.__len__() == 9):
-                print row_content
-                yield {
-                    'date' : row_content[0].replace(' ', ''),
-                    'hs_code' : int(row_content[1]),
-                    'description' : row_content[2],
-                    'origin_country' : row_content[3],
-                    'port_of_discharge' : row_content[4],
-                    'unit' : row_content[5],
-                    'quantity' : int(row_content[6].replace(',', '')),
-                    'value_inr' : int(row_content[7].replace(',', '')),
-                    'per_unit_inr' : int(row_content[8].replace(',', '')),
-                }
+            if (row_content.__len__() > 4):
+                yeild_data = {}
+                for value, key_index in zip(row_content, range(1, row_content.__len__() + 1)):
+                     yeild_data['data%d' % key_index] = value
+                yield (yeild_data)
